@@ -68,10 +68,10 @@ export default function DashboardLayout({
             </span>
           </Link>
           <Link
-            href="/clientes"
+            href="/dashboard/clients"
             className={`flex items-center gap-3 transition-all duration-300 px-2 py-2 rounded-lg
     ${
-      pathname === '/clientes'
+      pathname === '/dashboard/clients'
         ? 'bg-blue-100 text-blue-700 font-semibold'
         : 'text-gray-700 hover:text-blue-600'
     }
@@ -79,7 +79,7 @@ export default function DashboardLayout({
   `}
           >
             <span className="relative flex items-center justify-center">
-              {pathname === '/clientes' && !open && (
+              {pathname === '/dashboard/clients' && !open && (
                 <span className="absolute w-12 h-12 rounded-full bg-blue-100 -z-10" />
               )}
               <HiUserGroup size={24} />
@@ -91,17 +91,17 @@ export default function DashboardLayout({
             </span>
           </Link>
           <Link
-            href="/tarefas"
+            href="/tasks"
             className={`flex items-center gap-3 transition-all duration-300 px-2 py-2 rounded-lg
     ${
-      pathname === '/tarefas'
+      pathname === '/tasks'
         ? 'bg-blue-100 text-blue-700 font-semibold'
         : 'text-gray-700 hover:text-blue-600'
     }
     ${open ? '' : 'justify-center'}`}
           >
             <span className="relative flex items-center justify-center">
-              {pathname === '/tarefas' && !open && (
+              {pathname === '/tasks' && !open && (
                 <span className="absolute w-12 h-12 rounded-full bg-blue-100 -z-10" />
               )}
               <HiClipboardList size={24} />
@@ -123,7 +123,7 @@ export default function DashboardLayout({
       )}
 
       <main
-        className={`flex-1 p-8 transition-all duration-300 ${open ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'}`}
+        className={`flex-1 p-8 transition-all duration-300 `}
       >
         {children}
       </main>
