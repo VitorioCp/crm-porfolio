@@ -11,7 +11,7 @@ export default function Login() {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (email === 'admin@teste.com' && password === '123') {
+        if (email === 'teste@teste.com' && password === '123') {
             document.cookie = `token=meu-token-fake; path=/`;
             router.push('/dashboard');
         } else {

@@ -91,17 +91,17 @@ export default function DashboardLayout({
             </span>
           </Link>
           <Link
-            href="/tasks"
+            href="/dashboard/tasks"
             className={`flex items-center gap-3 transition-all duration-300 px-2 py-2 rounded-lg
     ${
-      pathname === '/tasks'
+      pathname === '/dashboard/tasks'
         ? 'bg-blue-100 text-blue-700 font-semibold'
         : 'text-gray-700 hover:text-blue-600'
     }
     ${open ? '' : 'justify-center'}`}
           >
             <span className="relative flex items-center justify-center">
-              {pathname === '/tasks' && !open && (
+              {pathname === '/dashboard/tasks' && !open && (
                 <span className="absolute w-12 h-12 rounded-full bg-blue-100 -z-10" />
               )}
               <HiClipboardList size={24} />
@@ -122,9 +122,7 @@ export default function DashboardLayout({
         />
       )}
 
-      <main
-        className={`flex-1 p-8 transition-all duration-300 `}
-      >
+      <main className={`flex-1 p-8 transition-all duration-300 `}>
         {children}
       </main>
     </div>
