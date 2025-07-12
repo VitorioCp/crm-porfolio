@@ -10,16 +10,17 @@ export default function DashboardPage() {
 
       <div className="flex gap-5">
         <BoxInfo
-          descricao="Comparado a 1 semana atrás."
+          descricao="Ultima semana"
           valor={14}
           novidades={5}
           topico="Clientes"
         />
         <BoxInfo
-          descricao="last month"
+          descricao="Ultima semana"
           valor={"R$2.500,00"}
-          novidades={'-8%'}
+          novidades={-8}
           topico="Receita"
+          exibirPorcentagem={true}
         />
       </div>
     </main>
