@@ -14,7 +14,9 @@ import { useEffect, useState } from 'react';
 export default function Clients() {
   const [clientes, setClientes] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
+    id: '',
     nome: '',
     telefone: '',
     email: '',
@@ -76,6 +78,17 @@ export default function Clients() {
     setShowModal(!showModal);
   };
 
+  const openEditModal = (cliente: any) => {
+    setFormData({
+      id: cliente.id,
+      nome: cliente.nome,
+      telefone: cliente.telefone,
+      email: cliente.email,
+      etapa: cliente.etapa,
+    });
+    setShowEditModal(true);
+  };
+
   const clientRegister = async (e: any) => {
     e.preventDefault();
     try {
@@ -90,6 +103,23 @@ export default function Clients() {
       setShowModal(false);
     } catch (error) {
       console.error('Error registering client:', error);
+    }
+  };
+
+  const clientUpdate = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/clients', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log('Cliente atualizado:', data);
+      await fetchClientes();
+      setShowEditModal(false);
+    } catch (error) {
+      console.error('Error updating client:', error);
     }
   };
 
@@ -158,12 +188,17 @@ export default function Clients() {
             {filteredClients.map((cliente: any) => (
               <TableRow
                 key={cliente.id}
-                className={`transition hover:bg-gray-50 ${
+                className={`transition hover:bg-gray-50 cursor-pointer ${
                   selectedClients.includes(cliente.id) ? 'bg-gray-100' : ''
                 }`}
+                onClick={() => {
+                  if (!selectionMode) {
+                    openEditModal(cliente);
+                  }
+                }}
               >
                 {selectionMode && (
-                  <TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedClients.includes(cliente.id)}
@@ -238,6 +273,63 @@ export default function Clients() {
           </div>
         </div>
       )}
+
+      {showEditModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Editar Cliente</h2>
+            <form className="space-y-4" onSubmit={clientUpdate}>
+              <Input
+                placeholder="Nome"
+                value={formData.nome}
+                onChange={(e) =>
+                  setFormData({ ...formData, nome: e.target.value })
+                }
+                className="rounded-full px-4 py-2 shadow"
+              />
+              <Input
+                placeholder="Telefone"
+                value={formData.telefone}
+                onChange={(e) =>
+                  setFormData({ ...formData, telefone: e.target.value })
+                }
+                className="rounded-full px-4 py-2 shadow"
+              />
+              <Input
+                placeholder="Email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className="rounded-full px-4 py-2 shadow"
+              />
+              <Input
+                placeholder="Etapa"
+                value={formData.etapa}
+                onChange={(e) =>
+                  setFormData({ ...formData, etapa: e.target.value })
+                }
+                className="rounded-full px-4 py-2 shadow"
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowEditModal(false)}
+                  className="rounded-full px-4 py-2"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-blue-600 text-white rounded-full px-4 py-2"
+                >
+                  Atualizar
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
-} 
+}
