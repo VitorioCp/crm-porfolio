@@ -10,7 +10,6 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
-import { body } from 'framer-motion/client';
 
 export default function Clients() {
   const [clientes, setClientes] = useState([]);
@@ -21,6 +20,8 @@ export default function Clients() {
     email: '',
     etapa: '',
   });
+
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedClients, setSelectedClients] = useState<string[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
 
@@ -34,6 +35,16 @@ export default function Clients() {
     fetchClientes();
   }, []);
 
+  const filteredClients = clientes.filter((cliente: any) => {
+    const termo = searchTerm.toLowerCase();
+    return (
+      cliente.nome.toLowerCase().includes(termo) ||
+      cliente.telefone.toLowerCase().includes(termo) ||
+      cliente.email.toLowerCase().includes(termo) ||
+      cliente.etapa.toLowerCase().includes(termo)
+    );
+  });
+
   const toggleSelectClient = (id: string) => {
     setSelectedClients((prev) =>
       prev.includes(id) ? prev.filter((cid) => cid !== id) : [...prev, id]
@@ -41,25 +52,25 @@ export default function Clients() {
   };
 
   const handleDeleteSelected = async () => {
-  try {
-    await Promise.all(
-      selectedClients.map((id) =>
-        fetch(`/api/clients`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id }),
-        })
-      )
-    );
-    setSelectedClients([]);
-    setSelectionMode(false);
-    fetchClientes();
-  } catch (error) {
-    console.error('Erro ao deletar clientes:', error);
-  }
-};
+    try {
+      await Promise.all(
+        selectedClients.map((id) =>
+          fetch(`/api/clients`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id }),
+          })
+        )
+      );
+      setSelectedClients([]);
+      setSelectionMode(false);
+      fetchClientes();
+    } catch (error) {
+      console.error('Erro ao deletar clientes:', error);
+    }
+  };
 
   const modalClient = () => {
     setShowModal(!showModal);
@@ -74,6 +85,7 @@ export default function Clients() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+      console.log('Cliente cadastrado:', data);
       await fetchClientes();
       setShowModal(false);
     } catch (error) {
@@ -88,6 +100,8 @@ export default function Clients() {
       <div className="flex flex-wrap gap-2 w-full mb-6 items-center">
         <Input
           placeholder="🔍 Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="bg-white rounded-full px-4 py-2 flex-grow shadow-sm"
         />
 
@@ -141,7 +155,7 @@ export default function Clients() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {clientes.map((cliente: any) => (
+            {filteredClients.map((cliente: any) => (
               <TableRow
                 key={cliente.id}
                 className={`transition hover:bg-gray-50 ${
@@ -226,4 +240,4 @@ export default function Clients() {
       )}
     </div>
   );
-}
+} 
