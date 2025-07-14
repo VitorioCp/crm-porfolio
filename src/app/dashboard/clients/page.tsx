@@ -10,6 +10,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
+import { ModalEditClient } from '@/components/clients/ModalEditClient';
 
 export default function Clients() {
   const [clientes, setClientes] = useState([]);
@@ -116,6 +117,7 @@ export default function Clients() {
       });
       const data = await response.json();
       console.log('Cliente atualizado:', data);
+      closeEditModal()
       await fetchClientes();
       setShowEditModal(false);
     } catch (error) {
@@ -123,6 +125,18 @@ export default function Clients() {
     }
   };
 
+  const closeEditModal = () => {
+  setShowEditModal(false);
+  setFormData({
+    id: '',
+    nome: '',
+    telefone: '',
+    email: '',
+    etapa: '',
+  });
+};
+
+  
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">Clientes</h1>
@@ -274,62 +288,7 @@ export default function Clients() {
         </div>
       )}
 
-      {showEditModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Editar Cliente</h2>
-            <form className="space-y-4" onSubmit={clientUpdate}>
-              <Input
-                placeholder="Nome"
-                value={formData.nome}
-                onChange={(e) =>
-                  setFormData({ ...formData, nome: e.target.value })
-                }
-                className="rounded-full px-4 py-2 shadow"
-              />
-              <Input
-                placeholder="Telefone"
-                value={formData.telefone}
-                onChange={(e) =>
-                  setFormData({ ...formData, telefone: e.target.value })
-                }
-                className="rounded-full px-4 py-2 shadow"
-              />
-              <Input
-                placeholder="Email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                className="rounded-full px-4 py-2 shadow"
-              />
-              <Input
-                placeholder="Etapa"
-                value={formData.etapa}
-                onChange={(e) =>
-                  setFormData({ ...formData, etapa: e.target.value })
-                }
-                className="rounded-full px-4 py-2 shadow"
-              />
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowEditModal(false)}
-                  className="rounded-full px-4 py-2"
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-blue-600 text-white rounded-full px-4 py-2"
-                >
-                  Atualizar
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <ModalEditClient showEditModal={showEditModal} clientUpdate={clientUpdate} setShowEditModal={closeEditModal} formData={formData} setFormData={setFormData}/>
     </div>
   );
 }
