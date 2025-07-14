@@ -28,6 +28,29 @@ export async function POST(request: Request) {
   }
 }
 
+export async function PUT(request: Request) {
+  try{
+    const {id, nome , telefone , email , etapa} = await request.json();
+    const db = await openDb();
+    const result = await db.run(
+      'UPDATE clientes SET nome = ?, telefone = ?, email = ?, etapa = ? WHERE id = ?',
+      [nome, telefone, email, etapa, id])
+    if (result.changes === 0) {
+      return Response.json(
+        { error: 'Cliente não encontrado' },
+        { status: 404 }
+      );
+    }
+    const cliente = await db.get('SELECT * FROM clientes WHERE id = ?', [id]);
+    return Response.json(cliente, { status: 200 });
+  }catch(e){
+    console.log("Erro ao atualizar cliente:", e);
+    return Response.json(
+      { error: 'Erro ao atualizar cliente' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function DELETE(request: Request) {
   const { id } = await request.json();
