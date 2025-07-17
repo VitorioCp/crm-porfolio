@@ -9,6 +9,7 @@ import {
   HiUserGroup,
   HiClipboardList,
 } from 'react-icons/hi';
+import { DarkModeToggle } from '@/components/DarkModeToggle';
 
 export default function DashboardLayout({
   children,
@@ -19,10 +20,10 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       <aside
         className={`
-          fixed md:static z-20 top-0 left-0 h-screen bg-white shadow-md p-6
+          fixed md:static z-20 top-0 left-0 h-screen bg-white dark:bg-black shadow-md p-6
           transition-all duration-300 flex flex-col
           ${open ? 'w-64' : 'w-16 items-center'}
         `}
@@ -36,7 +37,7 @@ export default function DashboardLayout({
             CRM
           </h2>
           <button
-            className="ml-auto bg-white rounded-full p-2 shadow-md border border-gray-300 transition-all"
+            className="ml-auto bg-white dark:bg-black rounded-full p-2 shadow-md border border-gray-300 transition-all"
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Fechar menu' : 'Abrir menu'}
           >
@@ -112,6 +113,8 @@ export default function DashboardLayout({
               Tarefas
             </span>
           </Link>
+
+            <DarkModeToggle open={open} />
         </nav>
       </aside>
 
